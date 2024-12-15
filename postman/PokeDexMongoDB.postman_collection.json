@@ -1,0 +1,227 @@
+{
+	"info": {
+		"_postman_id": "6be55434-8d8e-40e9-85d9-c005c9ee57b0",
+		"name": "PokeDexMongoDB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26765618"
+	},
+	"item": [
+		{
+			"name": "Get All Pokemon",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/pokemon/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"pokemon",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"ash\",\n    \"password\": \"ash123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"ash\",\n    \"password\":\"ash123\",\n    \"role\": \"trainer\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Pokemon",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWU0MzBlODQ5NjI5YWZmN2NjYjYzYiIsInVzZXJuYW1lIjoiYXNoIiwicm9sZSI6InRyYWluZXIiLCJpYXQiOjE3MzQyMzA4MDMsImV4cCI6MTczNDIzNDQwM30.lS4adcYUMSh0ZyTe7XlUCADOQfWuEIeZKwBATZtGNXQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"number\": 10,\n    \"name\": \"Pikachu\",\n    \"type\": \"electric\",\n    \"stats\": {\n        \"hp\": 35,\n        \"attack\": 55,\n        \"defense\": 40,\n        \"speed\": 90\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/pokemon/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"pokemon",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "My Pokemons",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWU0MzBlODQ5NjI5YWZmN2NjYjYzYiIsInVzZXJuYW1lIjoiYXNoIiwicm9sZSI6InRyYWluZXIiLCJpYXQiOjE3MzQyMzIzMjIsImV4cCI6MTczNDIzNTkyMn0.mxqq0F9-z_SZQeMViWLtLkKPuvMmyry0_l7MF_MWsm0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/pokemon/trainer/mypokemons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"pokemon",
+						"trainer",
+						"mypokemons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Pokemon",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWU0MzBlODQ5NjI5YWZmN2NjYjYzYiIsInVzZXJuYW1lIjoiYXNoIiwicm9sZSI6InRyYWluZXIiLCJpYXQiOjE3MzQyMzQxNzAsImV4cCI6MTczNDIzNzc3MH0.2YqQzszTQwAnE3d5KzPx8U41WCO5a6acj5M021wd6Yk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Golden\",\n    \"type\": \"water\",\n    \"stats\": {\n        \"hp\": 120,\n        \"attack\": 80,\n        \"defense\": 75,\n        \"speed\": 100\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/pokemon/10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"pokemon",
+						"10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWU0MzBlODQ5NjI5YWZmN2NjYjYzYiIsInVzZXJuYW1lIjoiYXNoIiwicm9sZSI6InRyYWluZXIiLCJpYXQiOjE3MzQyMzU3ODAsImV4cCI6MTczNDIzOTM4MH0.Lh_gJSrenAsCOMlLkIHaA4iRTd5-NUrAkhOy9_3XDrA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/pokemon/10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"pokemon",
+						"10"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
