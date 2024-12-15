@@ -1,30 +1,32 @@
-# Pokémon API
+# Pokémon API con MongoDB
 
 ## Descripción
 
-Este proyecto es una API REST para gestionar entrenadores y Pokémon, incluyendo funcionalidades como crear, actualizar, eliminar y buscar Pokémon por tipo, así como la implementación de autenticación y validación de datos.
+Este proyecto es una API REST diseñada para gestionar entrenadores y Pokémon. Ofrece funcionalidades completas como creación, actualización, eliminación y listado, además de implementar autenticación y validación de datos. La API utiliza MongoDB como base de datos para almacenar y gestionar información de manera eficiente.
+
 
 ## Características
 
-- **Autenticación**: Middleware para verificar que el usuario esté autenticado.
-- **Gestión de Pokémon**: Crear, actualizar, eliminar y listar Pokémon.
-- **Búsqueda**: Buscar Pokémon por tipo.
-- **Validación de datos**: Uso de `express-validator` para validar datos de entrada.
-- **Paginación**: Implementación de paginación en los endpoints de listado de Pokémon.
+- **Autenticación segura**: Uso de JSON Web Tokens (JWT) para proteger las rutas y garantizar que solo los usuarios autenticados puedan acceder a las funcionalidades.
+- **Gestión de Pokémon**: Operaciones CRUD (Crear, Leer, Actualizar y Eliminar) para administrar Pokémon.
+- **Gestión de Entrenadores**: CRUD completo para usuarios que actúan como entrenadores.
+- **MongoDB**: Base de datos no relacional utilizada para almacenar datos de entrenadores y Pokémon de manera eficiente y escalable.
 
 ## Tecnologías
 
-- **Node.js**: Plataforma para ejecutar el servidor.
-- **Express.js**: Framework web para Node.js.
-- **express-validator**: Middleware para validar los datos de las solicitudes.
-- **JSON Web Token (JWT)**: Para la autenticación de usuarios.
+- **Node.js**: Entorno de ejecución para construir aplicaciones rápidas y escalables.
+- **Express.js**: Framework para construir APIs REST de forma ágil y modular.
+- **JSON Web Token (JWT)**: Sistema de autenticación basado en tokens.
+- **MongoDB**: Base de datos no relacional ideal para manejar grandes volúmenes de datos.
+- **mongoose**: ODM (Object Data Modeling) para interactuar con MongoDB de manera sencilla y estructurada.
+- **uuid**: Para la generación de identificadores únicos en ciertos recursos.
 
 ## Instalación
 
 1. **Clonar el repositorio**
 
    ```bash
-   git clone https://github.com/pabarca88/pokedexAPI.git
+   git clone https://github.com/pabarca88/PokedexMongoDB.git
 
 2. **Instalar dependencias**
 
@@ -79,7 +81,8 @@ Esta ruta permite registrar un nuevo usuario proporcionando un nombre de usuario
 ```json
 {
   "username": "username",
-  "password": "password"
+  "password": "password",
+  "role": "trainer"
 }
 ```
 
@@ -88,7 +91,7 @@ Esta ruta permite registrar un nuevo usuario proporcionando un nombre de usuario
 {
     "message": "Usuario registrado exitosamente",
     "user": {
-        "id": 4,
+        "id": id,
         "username": "username",
         "role": "trainer"
     }
@@ -108,7 +111,6 @@ Esta ruta permite registrar un nuevo usuario proporcionando un nombre de usuario
 
 - **`GET pokemon/`**: Obtener todos los Pokémon (con paginación).
 - **`GET pokemon/:id`**: Obtener un Pokémon por su ID.
-- **`GET pokemon/search`**: Buscar Pokémon por tipo.
 
 ### Rutas protegidas (requieren autenticación)
 
@@ -123,23 +125,6 @@ Esta ruta permite registrar un nuevo usuario proporcionando un nombre de usuario
 
 Este middleware verifica si el usuario está autenticado. Si no lo está, responde con un error 401.
 
-### Validación de Datos
-
-#### `createPokemonValidation`
-
-Middleware para validar los datos al crear un Pokémon.
-
-#### `handleValidationErrors`
-
-Middleware para manejar errores de validación.
-
-### Paginación
-
-Para los endpoints que devuelven listas de Pokémon, se ha implementado paginación utilizando los parámetros page y limit.
-
-Ejemplo de solicitud para obtener la primera página de 10 Pokémon:
-
-    GET /?page=1&limit=10
 
 ### Estructura del Proyecto
     
@@ -150,6 +135,10 @@ Ejemplo de solicitud para obtener la primera página de 10 Pokémon:
     ├── models
     │   └── user.model.js
     │   └── pokemon.model.js
+    ├── repository
+    │   └── auth.repository.js
+    │   └── pokemon.repository.js
+    │   └── db.js
     ├── routes
     │   └── auth.route.js
     │   └── pokemon.route.js
@@ -158,6 +147,7 @@ Ejemplo de solicitud para obtener la primera página de 10 Pokémon:
     │   └── pokemon.service.js
     ├── validations
     │   └── pokemon.validation.js
+    │── config.js
     ├── index.js
     ├── package.json
     └── README.md
@@ -173,9 +163,15 @@ Este endpoint permite crear un nuevo Pokémon. El cuerpo de la solicitud debe in
 
 ```json
 {
-  "name": "Pikachu",
-  "type": "Electric",
-  "level": 25
+    "number": 1,
+    "name": "Pikachu",
+    "type": "ghost",
+    "stats": {
+        "hp": 105,
+        "attack": 550,
+        "defense": 40,
+        "speed": 90
+    }
 }
 ````
 
@@ -183,12 +179,21 @@ Este endpoint permite crear un nuevo Pokémon. El cuerpo de la solicitud debe in
 
 ```json
 {
-  "id": 1,
-  "name": "Pikachu",
-  "type": "Electric",
-  "level": 25,
-  "trainerId": 1,
-  "createdAt": "2024-12-01T10:00:00Z"
+    "data": {
+        "number": 1,
+        "name": "Pikachu",
+        "type": "ghost",
+        "stats": {
+            "hp": 105,
+            "attack": 550,
+            "defense": 40,
+            "speed": 90
+        },
+        "trainer": "687a1ec6-79bd-49e8-b6cf-0eca9b2512e2",
+        "_id": "675edbf2d1a826d65cce2fc5",
+        "createdAt": "2024-12-15T13:38:58.855Z",
+        "__v": 0
+    }
 }
 ```
 
@@ -207,9 +212,14 @@ Authorization: Bearer <tu-token-aquí>
 
 ```json
 {
-  "name": "Pikachu",
-  "type": "Electric",
-  "level": 35
+    "name": "Golden",
+    "type": "water",
+    "stats": {
+        "hp": 120,
+        "attack": 80,
+        "defense": 75,
+        "speed": 100
+    }
 }
 ```
 
@@ -217,30 +227,18 @@ Authorization: Bearer <tu-token-aquí>
 
 ```json
 {
-  "id": 1,
-  "name": "Pikachu",
-  "type": "Electric",
-  "level": 35,
-  "trainerId": 1,
-  "createdAt": "2024-12-01T10:00:00Z"
+    "stats": {
+        "hp": 120,
+        "attack": 80,
+        "defense": 75,
+        "speed": 100
+    },
+    "_id": "675ed554d1a826d65cce2fb5",
+    "number": 110,
+    "name": "Golden",
+    "type": "water",
+    "trainer": "687a1ec6-79bd-49e8-b6cf-0eca9b2512e2",
+    "createdAt": "2024-12-15T13:10:44.484Z",
+    "__v": 0
 }
-```
-
-### Buscar Pokémon por tipo
-
-#### `GET pokemon/search?type=Electric:`
-
-#### Respuesta exitosa
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Pikachu",
-    "type": "Electric",
-    "level": 25,
-    "trainerId": 1,
-    "createdAt": "2024-12-01T10:00:00Z"
-  }
-]
 ```
